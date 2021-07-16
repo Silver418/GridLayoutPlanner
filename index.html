@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Layout Planner</title>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    
+    <div id="appWrap">
+        
+        <!--Control Panel-->
+        <div id="controlPanel">
+            <!--Reset Button-->
+            <button id="resetButton">Reset Grid</button>
+
+            <!--Box for buildable furniture display-->
+            <div id="windowShopping">
+                <div id="windowShoppingSlot"></div>
+            </div>
+
+            <form id = "buildFurniture">
+                <label for="shoppingX">Width:</label>
+                <input type="number" id="shoppingX" name="shoppingX" min="1" max="6" value="1">
+                <label for="shoppingY">Height:</label>
+                <input type="number" id="shoppingY" name="shoppingY" min="1" max="6" value="1">
+                <input type="button" id="orderFurniture" name="orderFurniture" value="Build Furniture">
+            </form>
+
+            <div id="garbageBin" class="garbage">
+                Garbage Bin:<br/>Drop Here to Delete
+            </div>
+        </div>
+
+
+        <!--Grid-->
+        <div id="daGrid">
+            <!--Active Furniture (furniture that is currently on the grid)-->
+            <div id="activeFurniture">
+            
+            </div>
+        </div>
+
+
+    </div>
+    <script src="scripts/Furniture.js"></script>
+    <script src="scripts/ObjectDomLinker.js"></script>
+    <script src="scripts/FurnitureLinker.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
