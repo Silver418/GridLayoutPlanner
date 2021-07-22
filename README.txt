@@ -29,3 +29,6 @@ CHANGELOG
 ---------
 v0.10
 There is now a grid layout planner.
+
+v0.11
+Reset grid button now has a confirmation box and removes furniture + terrain instead of just terrain.

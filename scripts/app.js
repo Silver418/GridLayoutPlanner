@@ -52,9 +52,26 @@ const getGridSquarePosition = (x, y) => {
 
 //Reset Button Event
 controlPanel.querySelector("#resetButton").addEventListener("click", () => {
-    daGrid.querySelectorAll(".full").forEach(box => {
-        box.classList.remove("full");
-    })
+    //confirmation box
+    let confirmBool = confirm("This will remove all terrain and all furniture on the grid! Continue?");
+
+    if (confirmBool){
+        //clear terrain
+        daGrid.querySelectorAll(".full").forEach(box => {
+            box.classList.remove("full");
+        })
+
+        //clear furniture
+        //skipping index 0 to avoid removing window shopping object
+        //working backwards so the relabel call inside every removal isn't doing a pile of unnecessary work
+        //will need to switch this out for a better version once I add a remove-from-index-to-index version to the ObjectDomLinker library
+        for (i = furnitureLink.Length() - 1; i > 0; i--){
+            furnitureLink.destroySetFromIndex(i);
+        }
+        
+    }
+
+    
 });
 
 

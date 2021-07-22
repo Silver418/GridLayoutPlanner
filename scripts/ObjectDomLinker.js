@@ -14,6 +14,8 @@
         //fetchDomFromIndex(index){}
         //fetchDomFromObj(object){}
 
+    //removing a range of sets
+
 
 class ObjectDomLinker {
     constructor(indexLabel){
@@ -21,6 +23,13 @@ class ObjectDomLinker {
         this.indexLabel = indexLabel;
     }
 
+    /************************************************/
+    //return length of ObjectDomArray
+    Length(){
+        return this.ObjectDomArray.length;
+    }
+
+    /************************************************/
     addSet(object, element){
         element.setAttribute(this.indexLabel, this.ObjectDomArray.length);
         object[this.indexLabel] = this.ObjectDomArray.length;
