@@ -1,5 +1,5 @@
 Grid Layout Planner
-v0.10
+v0.12
 ----------------------------------------------
 
 A tool for planning grid layouts based on draggable furniture & blocked terrain.
@@ -20,8 +20,6 @@ KNOWN BUGS
 PLANNED FEATURES
 ----------------
 	~Custom grid sizes (& grid re-drawing implied thereby)
-	~WASD buttons adjusts the size of the window shopping furniture - AD to decrease/increase width, WS to increase/decrease height
-	~Give Reset Grid button a confirmation popup, especially before I make it destroy furniture as well as terrain
 	~Improve terrain editing - click/drag paint mode at least, separate paint/erase modes
 
 
@@ -32,3 +30,7 @@ There is now a grid layout planner.
 
 v0.11
 Reset grid button now has a confirmation box and removes furniture + terrain instead of just terrain.
+
+v0.12
+WASD keys will adjust the size of the furniture in the window shopping area.
+SW will decrease/increase height, AD will decrease/increase width.

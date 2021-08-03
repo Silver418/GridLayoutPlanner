@@ -5,7 +5,10 @@ const controlPanel = document.querySelector("#controlPanel");
 const shopping = document.querySelector("#windowShoppingSlot");
 const activeFurniture = document.querySelector("#activeFurniture");
 const buildFurniture = document.querySelector("#buildFurniture");
+const buildX = buildFurniture.querySelector("#shoppingX");
+const buildY = buildFurniture.querySelector("#shoppingY");
 const garbageBin = document.querySelector("#garbageBin");
+
 
 //Vars
 const desiredX = 25;
@@ -92,6 +95,40 @@ const newWindowShoppingFurniture = () => {
 
 
 // Furniture objects (probably all events added to appWrapper)
+
+//resize window shopping furniture object on WASD
+document.addEventListener("keydown", e => {
+    if (!liftedFurniture) {
+
+        if (e.key == 'w') { //increase height of window shopping furniture
+            if (buildY.value < 6){ //TODO: create a variable that contains max size, have script write that value into the HTML widget on page load, use it here instead of literal 6
+                buildY.value++;
+                newWindowShoppingFurniture();
+            }
+            console.log("press w key");
+        } else if (e.key == 's') { //decrease height of window shopping furniture
+            if (buildY.value > 1){
+                buildY.value--;
+                newWindowShoppingFurniture();
+            }
+            console.log("press s key");
+
+        } else if (e.key == 'd') { //increase width of window shopping furniture
+            if (buildX.value < 6){
+                buildX.value++;
+                newWindowShoppingFurniture();
+            }
+            console.log("press d key");
+        } else if (e.key == 'a') { //decrease width of window shopping furniture
+            if (buildX.value > 1){
+                buildX.value--;
+                newWindowShoppingFurniture();
+            }
+            console.log("press a key");
+        }
+    }
+}); //end WASD event 
+
 
 //lift some furniture for dragging
 appWrap.addEventListener("mousedown", e => {
@@ -225,9 +262,6 @@ appWrap.addEventListener("mouseup", e => {
         liftedFurniture = null;
         mode = "paint";
     }//end if(liftedFurniture)
-
-
-
 
 }); //end mouseup event to drop lifted furniture
 
