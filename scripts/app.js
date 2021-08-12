@@ -11,8 +11,9 @@ const garbageBin = document.querySelector("#garbageBin");
 
 
 //Vars
-const desiredX = 25;
+const desiredX = 25; //x & y for grid size
 const desiredY = 25;
+let maxFurnitureSize = 6; //maximum squares for the height & width of furniture pieces
 
 let mode = "paint";
 //valid modes so far - "paint", "lift"
@@ -22,9 +23,6 @@ const furnitureLink = new FurnitureLinker("furnitureIndex"); //extended version
 //index 0 is reserved for the current window shopping furniture
 
 let liftedFurniture;
-
-
-
 
 
 
@@ -92,6 +90,19 @@ const newWindowShoppingFurniture = () => {
     furnitureLink.addSetAtIndex(windowFurniture, windowFurniture.furniture, 0);
 }
 
+//Furniture size NumUpDown inputs
+//enforce minimum 1 & maximum of maxFurnitureSize (defined in vars section)
+//method to enforce values
+const enforceFurnitureSize = handle => {
+    if (handle.value < 1){
+        handle.value = 1;
+    } else if (handle.value > maxFurnitureSize){
+        handle.value = maxFurnitureSize
+    }
+}
+//event handlers for value change
+buildX.addEventListener("input", e => {enforceFurnitureSize(e.target)});
+buildY.addEventListener("input", e => {enforceFurnitureSize(e.target)});
 
 
 // Furniture objects (probably all events added to appWrapper)
@@ -101,30 +112,26 @@ document.addEventListener("keydown", e => {
     if (!liftedFurniture) {
 
         if (e.key == 'w') { //increase height of window shopping furniture
-            if (buildY.value < 6){ //TODO: create a variable that contains max size, have script write that value into the HTML widget on page load, use it here instead of literal 6
+            if (buildY.value < maxFurnitureSize){
                 buildY.value++;
                 newWindowShoppingFurniture();
             }
-            console.log("press w key");
         } else if (e.key == 's') { //decrease height of window shopping furniture
             if (buildY.value > 1){
                 buildY.value--;
                 newWindowShoppingFurniture();
             }
-            console.log("press s key");
 
         } else if (e.key == 'd') { //increase width of window shopping furniture
-            if (buildX.value < 6){
+            if (buildX.value < maxFurnitureSize){
                 buildX.value++;
                 newWindowShoppingFurniture();
             }
-            console.log("press d key");
         } else if (e.key == 'a') { //decrease width of window shopping furniture
             if (buildX.value > 1){
                 buildX.value--;
                 newWindowShoppingFurniture();
             }
-            console.log("press a key");
         }
     }
 }); //end WASD event 
@@ -270,9 +277,7 @@ appWrap.addEventListener("mouseup", e => {
 
 
 
-
-
-
+//setup on initial page load
 
 
 //Initialize default furniture object
@@ -300,3 +305,7 @@ for (i = 0; i < desiredY; i++) {
 
     daGrid.appendChild(myRow);
 }
+
+//set max inputs for furniture size length & width, using variable defined in vars section of this script
+buildX.max=maxFurnitureSize;
+buildY.max=maxFurnitureSize;

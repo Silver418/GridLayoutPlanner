@@ -1,11 +1,11 @@
 Grid Layout Planner
-v0.12
+v0.13
 ----------------------------------------------
 
 A tool for planning grid layouts based on draggable furniture & blocked terrain.
 The general intent is to be used as a utility for games with a grid-based design element such as Rimworld or Stardew Valley.
 
-
+Tested in Google Chrome on Windows.
 
 
 
@@ -15,7 +15,6 @@ KNOWN BUGS
 	~The first time furniture is dragged from the shopping window, it displays under the grid until dropped onto the grid.
 	~Widths & heights above the maximum of 6 squares can be entered by typing instaed of using the up/down arrows.
 		This can cause furniture in the shopping window	to overflow & cover buttons.
-	~"Reset Grid" button only resets terrain, not furniture
 
 PLANNED FEATURES
 ----------------
@@ -34,3 +33,7 @@ Reset grid button now has a confirmation box and removes furniture + terrain ins
 v0.12
 WASD keys will adjust the size of the furniture in the window shopping area.
 SW will decrease/increase height, AD will decrease/increase width.
+
+v0.13
+Number input will properly enforce minimum (1) & maximum width & height in squares for furniture.
+Maximum is set from a variable in the app.js script for easier changes in the future.
