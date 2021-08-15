@@ -55,7 +55,7 @@ body{
 #daGrid{
     position: absolute;
     left: 325px;
-    top:25px;
+    top: 50px;
 }
 
 .square, .furnitureLeg{  /*for squares on the grid*/

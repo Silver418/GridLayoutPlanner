@@ -13,6 +13,8 @@ const garbageBin = document.querySelector("#garbageBin");
 //Vars
 const desiredX = 25; //x & y for grid size
 const desiredY = 25;
+//const desiredX = 75;
+//const desiredY = 75;
 let maxFurnitureSize = 6; //maximum squares for the height & width of furniture pieces
 
 let mode = "paint";
@@ -26,9 +28,28 @@ let liftedFurniture;
 
 
 
-
-
+//********************************************************/
 //Grid Events/Stuff
+
+//adjust min-height & min-width of app wrapper to fit grid - call this after initializing or resizing the grid
+const setWrapperMinSize = () => {
+    var squareSize = document.querySelector("#square0-0").offsetWidth;
+    var gridLeftIndent = Number(getComputedStyle(daGrid)["left"].split("px")[0]);
+    var gridTopIndent = Number(getComputedStyle(daGrid)["top"].split("px")[0]);
+    var gridMinHeight = desiredY * squareSize;
+    var gridMinWidth = desiredX * squareSize;
+
+    console.log(`${squareSize} ${gridLeftIndent} ${gridMinHeight} ${gridMinWidth}`);
+
+    daGrid.style.minWidth = gridMinWidth + "px";
+    daGrid.style.minHeight = gridMinHeight + "px";
+
+    appWrap.style.minWidth = (gridLeftIndent + gridMinWidth) + "px";
+    appWrap.style.minHeight = (gridTopIndent + gridMinHeight) + "px";
+}
+
+
+
 //Clicking on the grid event
 daGrid.addEventListener("click", e => {
     //paint mode: filling in grid boxes
@@ -49,6 +70,7 @@ const getGridSquarePosition = (x, y) => {
 
 
 
+//********************************************************/
 //Control Panel Events
 
 //Reset Button Event
@@ -70,10 +92,8 @@ controlPanel.querySelector("#resetButton").addEventListener("click", () => {
             furnitureLink.destroySetFromIndex(i);
         }
         
-    }
-
-    
-});
+    }    
+}); //end reset button handler
 
 
 //Build Furniture button event listener
@@ -105,7 +125,9 @@ buildX.addEventListener("input", e => {enforceFurnitureSize(e.target)});
 buildY.addEventListener("input", e => {enforceFurnitureSize(e.target)});
 
 
-// Furniture objects (probably all events added to appWrapper)
+
+//********************************************************/
+// Furniture object events
 
 //resize window shopping furniture object on WASD
 document.addEventListener("keydown", e => {
@@ -183,11 +205,9 @@ document.addEventListener("keydown", e => {
 
             //change dom element to new orientation
             liftedObject.setOrientation();
-
-
         }
-    }
-});
+    } //end end if q/e keys
+}); //end q/e key event handler
 
 
 
@@ -275,14 +295,12 @@ appWrap.addEventListener("mouseup", e => {
 
 
 
-
-
+//********************************************************/
 //setup on initial page load
 
 
 //Initialize default furniture object
 newWindowShoppingFurniture();
-
 
 //Initialize base Grid
 //(Not combining with furniture grid generation because they will be different when we add fencing to base grid)
@@ -305,6 +323,9 @@ for (i = 0; i < desiredY; i++) {
 
     daGrid.appendChild(myRow);
 }
+
+//set minimum size of wrapper to fit grid
+setWrapperMinSize();
 
 //set max inputs for furniture size length & width, using variable defined in vars section of this script
 buildX.max=maxFurnitureSize;
