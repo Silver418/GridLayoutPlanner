@@ -17,11 +17,9 @@ const desiredY = 25;
 //const desiredY = 75;
 let maxFurnitureSize = 6; //maximum squares for the height & width of furniture pieces
 
-let mode = "paint";
-//valid modes so far - "paint", "lift"
+let mode = "paint";     //valid modes so far - "paint", "lift"
 
 const furnitureLink = new FurnitureLinker("furnitureIndex"); //extended version
-//const furnitureLink = new ObjectDomLinker("furnitureIndex"); //non-extended version
 //index 0 is reserved for the current window shopping furniture
 
 let liftedFurniture;
@@ -39,8 +37,6 @@ const setWrapperMinSize = () => {
     var gridMinHeight = desiredY * squareSize;
     var gridMinWidth = desiredX * squareSize;
 
-    console.log(`${squareSize} ${gridLeftIndent} ${gridMinHeight} ${gridMinWidth}`);
-
     daGrid.style.minWidth = gridMinWidth + "px";
     daGrid.style.minHeight = gridMinHeight + "px";
 
@@ -48,7 +44,48 @@ const setWrapperMinSize = () => {
     appWrap.style.minHeight = (gridTopIndent + gridMinHeight) + "px";
 }
 
+//generate a new full grid
+const initializeGrid = () => {
+    for (let i = 0; i < desiredY; i++) {
+        const myRow = document.createElement("div");
+        myRow.classList.add("row");
+        myRow.setAttribute("id", `row${i}`);
 
+        for (let j = 0; j < desiredX; j++) {
+            const myBox = document.createElement("div");
+            myBox.classList.add("square");
+            myBox.setAttribute("id", `square${j}-${i}`);
+
+
+            myRow.appendChild(myBox);
+        }
+
+        daGrid.appendChild(myRow);
+    }
+}
+
+//delete grid & everything on it
+const destroyGrid = () =>{
+    //being very odd about this as future proofing: some planned future features will have extra non-grid places
+    //to store furniture, so grid furniture won't necessarily be in order or represent all furniture in the furnitureLinker array
+    
+    let gridFurnitureIndexes = [];
+    //get indexes of all active furniture, add to array
+    activeFurniture.childNodes.forEach(thisNode=>{
+        gridFurnitureIndexes.push((Number(thisNode.getAttribute("furnitureIndex"))));
+    })
+    //reverse sort indexes in array
+    gridFurnitureIndexes.sort((a, b)=>{return b-a});
+    //destroy matching object-dom sets of all indexes in array
+    for (let i = 0; i < gridFurnitureIndexes.length; i++){
+        furnitureLink.destroySetFromIndex(gridFurnitureIndexes[i]);
+    }
+
+    //remove grid
+    daGrid.querySelectorAll(".row").forEach(thisRow => {
+        thisRow.remove();
+    })
+} //end destroyGrid()
 
 //Clicking on the grid event
 daGrid.addEventListener("click", e => {
@@ -78,7 +115,7 @@ controlPanel.querySelector("#resetButton").addEventListener("click", () => {
     //confirmation box
     let confirmBool = confirm("This will remove all terrain and all furniture on the grid! Continue?");
 
-    if (confirmBool){
+    if (confirmBool) {
         //clear terrain
         daGrid.querySelectorAll(".full").forEach(box => {
             box.classList.remove("full");
@@ -88,11 +125,11 @@ controlPanel.querySelector("#resetButton").addEventListener("click", () => {
         //skipping index 0 to avoid removing window shopping object
         //working backwards so the relabel call inside every removal isn't doing a pile of unnecessary work
         //will need to switch this out for a better version once I add a remove-from-index-to-index version to the ObjectDomLinker library
-        for (i = furnitureLink.Length() - 1; i > 0; i--){
+        for (let i = furnitureLink.Length() - 1; i > 0; i--) {
             furnitureLink.destroySetFromIndex(i);
         }
-        
-    }    
+
+    }
 }); //end reset button handler
 
 
@@ -114,15 +151,15 @@ const newWindowShoppingFurniture = () => {
 //enforce minimum 1 & maximum of maxFurnitureSize (defined in vars section)
 //method to enforce values
 const enforceFurnitureSize = handle => {
-    if (handle.value < 1){
+    if (handle.value < 1) {
         handle.value = 1;
-    } else if (handle.value > maxFurnitureSize){
+    } else if (handle.value > maxFurnitureSize) {
         handle.value = maxFurnitureSize
     }
 }
 //event handlers for value change
-buildX.addEventListener("input", e => {enforceFurnitureSize(e.target)});
-buildY.addEventListener("input", e => {enforceFurnitureSize(e.target)});
+buildX.addEventListener("input", e => { enforceFurnitureSize(e.target) });
+buildY.addEventListener("input", e => { enforceFurnitureSize(e.target) });
 
 
 
@@ -134,23 +171,23 @@ document.addEventListener("keydown", e => {
     if (!liftedFurniture) {
 
         if (e.key == 'w') { //increase height of window shopping furniture
-            if (buildY.value < maxFurnitureSize){
+            if (buildY.value < maxFurnitureSize) {
                 buildY.value++;
                 newWindowShoppingFurniture();
             }
         } else if (e.key == 's') { //decrease height of window shopping furniture
-            if (buildY.value > 1){
+            if (buildY.value > 1) {
                 buildY.value--;
                 newWindowShoppingFurniture();
             }
 
         } else if (e.key == 'd') { //increase width of window shopping furniture
-            if (buildX.value < maxFurnitureSize){
+            if (buildX.value < maxFurnitureSize) {
                 buildX.value++;
                 newWindowShoppingFurniture();
             }
         } else if (e.key == 'a') { //decrease width of window shopping furniture
-            if (buildX.value > 1){
+            if (buildX.value > 1) {
                 buildX.value--;
                 newWindowShoppingFurniture();
             }
@@ -213,8 +250,8 @@ document.addEventListener("keydown", e => {
 
 //put down lifted furniture on mouseup
 appWrap.addEventListener("mouseup", e => {
-    
-    
+
+
     if (liftedFurniture) {
         liftedObject = furnitureLink.fetchObjFromDom(liftedFurniture);
 
@@ -224,9 +261,9 @@ appWrap.addEventListener("mouseup", e => {
         let boxWeCareAbout;
         let dropType = "";
         elements.forEach(box => {
-            if (box.classList.contains("gridSquare") === true) { //if drop location is on the grid
+            if (box.classList.contains("square") === true) { //if drop location is on the grid
                 boxWeCareAbout = box;
-                dropType = "gridSquare";
+                dropType = "square";
                 //if the droplist shows signs of getting big, we might want to make it an actual array & loop through it
             } else if (box === garbageBin) { //if drop location is garbage bin
                 boxWeCareAbout = box;
@@ -237,8 +274,7 @@ appWrap.addEventListener("mouseup", e => {
 
 
         if (boxWeCareAbout) {
-            if (dropType === "gridSquare") {
-
+            if (dropType === "square") {
                 liftedFurniture.style.position = "absolute";
                 liftedFurniture.style.left = boxWeCareAbout.offsetLeft;
                 liftedFurniture.style.top = boxWeCareAbout.offsetTop;
@@ -303,30 +339,11 @@ appWrap.addEventListener("mouseup", e => {
 newWindowShoppingFurniture();
 
 //Initialize base Grid
-//(Not combining with furniture grid generation because they will be different when we add fencing to base grid)
-let i;
-for (i = 0; i < desiredY; i++) {
-    const myRow = document.createElement("div");
-    myRow.classList.add("row");
-    myRow.setAttribute("id", `row${i}`);
-
-    let j;
-    for (j = 0; j < desiredX; j++) {
-        const myBox = document.createElement("div");
-        myBox.classList.add("square");//eventually will remove this when we style grid squares & furniture squares differently
-        myBox.classList.add("gridSquare");
-        myBox.setAttribute("id", `square${j}-${i}`);
-
-
-        myRow.appendChild(myBox);
-    }
-
-    daGrid.appendChild(myRow);
-}
+initializeGrid()
 
 //set minimum size of wrapper to fit grid
 setWrapperMinSize();
 
 //set max inputs for furniture size length & width, using variable defined in vars section of this script
-buildX.max=maxFurnitureSize;
-buildY.max=maxFurnitureSize;
+buildX.max = maxFurnitureSize;
+buildY.max = maxFurnitureSize;

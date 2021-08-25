@@ -7,37 +7,36 @@
 
 
 //potential new methods to add:
-    //removing an element, but keeping the object
-    //associating a new element with an object
+//removing an element, but keeping the object
+//associating a new element with an object
 
-    //fetching elements????
-        //fetchDomFromIndex(index){}
-        //fetchDomFromObj(object){}
+//fetching elements????
+//fetchDomFromIndex(index){}
+//fetchDomFromObj(object){}
 
-    //removing a range of sets
+//removing a range of sets
 
 
 class ObjectDomLinker {
-    constructor(indexLabel){
+    constructor(indexLabel) {
         this.ObjectDomArray = [];
         this.indexLabel = indexLabel;
     }
 
     /************************************************/
     //return length of ObjectDomArray
-    Length(){
+    Length() {
         return this.ObjectDomArray.length;
     }
 
     /************************************************/
-    addSet(object, element){
+    addSet(object, element) {
         element.setAttribute(this.indexLabel, this.ObjectDomArray.length);
         object[this.indexLabel] = this.ObjectDomArray.length;
         this.ObjectDomArray.push([object, element]);
     }
 
-    addSetAtIndex(object, element, index)
-    {
+    addSetAtIndex(object, element, index) {
         element.setAttribute(this.indexLabel, index);
         object[this.indexLabel] = index;
         this.ObjectDomArray[index] = [object, element];
@@ -46,56 +45,70 @@ class ObjectDomLinker {
 
     /************************************************/
     //getting the index of a set
-    indexFromDom(element){
+    indexFromDom(element) {
         return element.getAttribute(this.indexLabel);
     }
 
-    indexFromObj(object){
+    indexFromObj(object) {
         return object[this.indexLabel];
     }
 
 
     /************************************************/
     //fetching objects
-    fetchObjFromIndex(index){
+    fetchObjFromIndex(index) {
         return this.ObjectDomArray[index][0];
     }
 
-    fetchObjFromDom(element){
+    fetchObjFromDom(element) {
         return this.ObjectDomArray[element.getAttribute(this.indexLabel)][0];
     }
 
 
     /************************************************/
     //destroying a set
-    destroySetFromDom(element){
+    destroySetFromDom(element) {
         const index = element.getAttribute(this.indexLabel);
         console.log(element.parentNode);
         element.parentNode.removeChild(element);
-        this.ObjectDomArray.splice(index,1);
+        this.ObjectDomArray.splice(index, 1);
         this.relabelByIndex(index);
     }
 
-    destroySetFromIndex(index){
+    destroySetFromIndex(index) {
         this.ObjectDomArray[index][1].parentNode.removeChild(this.ObjectDomArray[index][1]);
         this.ObjectDomArray.splice(index, 1);
         this.relabelByIndex(index);
     }
 
+    //destroy all sets in an index range
+    destroySetsFromIndexRange(lowIndex, highIndex) {
+        if (lowIndex >= 0 && highIndex < this.ObjectDomArray.length) {
+            for (let i = highIndex; i >= lowIndex; i--) { //remove DOM elements from DOM
+                this.ObjectDomArray[i][1].parentNode.removeChild(this.ObjectDomArray[i][1]);
+            }
+
+            this.ObjectDomArray.splice(lowIndex, highIndex - lowIndex + 1); //remove object-element nodes from array
+            this.relabelByIndex(lowIndex); //relable remaining nodes from removal point up
+        } else {
+            console.log(`ObjectDomLinker.js, destroySetsFromIndexRange() - Invalid range ${lowIndex} to ${highIndex}`);
+        }
+    }
+
 
     /***************************************************/
     //redo index labels
-    relabelAll(){
+    relabelAll() {
         let i;
-        for (i=0; i < this.ObjectDomArray.length; i++){
+        for (i = 0; i < this.ObjectDomArray.length; i++) {
             this.ObjectDomArray[i][0][indexLabel] = i;
             this.ObjectDomArray[i][1].setAttribute(indexLabel, i);
         }
     }
 
-    relabelByIndex(index){
+    relabelByIndex(index) {
         let i;
-        for (i=index; i < this.ObjectDomArray.length; i++){
+        for (i = index; i < this.ObjectDomArray.length; i++) {
             this.ObjectDomArray[i][0][this.indexLabel] = i;
             this.ObjectDomArray[i][1].setAttribute(this.indexLabel, i);
         }

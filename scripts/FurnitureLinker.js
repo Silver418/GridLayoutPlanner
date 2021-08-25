@@ -21,7 +21,7 @@ class FurnitureLinker extends ObjectDomLinker{
         }
 
         //detect collision with other furniture objects
-        for (i = 0; i < this.ObjectDomArray.length; i++){
+        for (let i = 0; i < this.ObjectDomArray.length; i++){
             let checkObject =  super.fetchObjFromIndex(i);
             if (checkObject !== furnitureObj) //do not check the furniture you're moving against
             {
