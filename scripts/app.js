@@ -8,14 +8,15 @@ const buildFurniture = document.querySelector("#buildFurniture");
 const buildX = buildFurniture.querySelector("#shoppingX");
 const buildY = buildFurniture.querySelector("#shoppingY");
 const garbageBin = document.querySelector("#garbageBin");
-
+const rebuildGrid = document.querySelector("#rebuildGrid");
 
 //Vars
 const desiredX = 25; //x & y for grid size
 const desiredY = 25;
 //const desiredX = 75;
 //const desiredY = 75;
-let maxFurnitureSize = 6; //maximum squares for the height & width of furniture pieces
+let maxFurnitureSize = 6;   //maximum squares for the height & width of furniture pieces
+//let maxGridSize = 200;     //maximum height & width in squares for grid. Completely arbitrary for now. :P
 
 let mode = "paint";     //valid modes so far - "paint", "lift"
 
@@ -107,6 +108,8 @@ const getGridSquarePosition = (x, y) => {
 
 
 
+
+
 //********************************************************/
 //Control Panel Events
 
@@ -161,6 +164,20 @@ const enforceFurnitureSize = handle => {
 buildX.addEventListener("input", e => { enforceFurnitureSize(e.target) });
 buildY.addEventListener("input", e => { enforceFurnitureSize(e.target) });
 
+
+//Grid size NumUpDown inputs
+//enforce minimum 1. May add maximum size later.
+//method to enforce values
+const enforceGridSize = handle => {
+    if (handle.value < 1) {
+        handle.value = 1;
+    } else if (handle.value > maxFurnitureSize) {
+        handle.value = maxFurnitureSize
+    }
+}
+//event handlers for value change
+rebuildGrid.querySelector("#gridX").addEventListener("input", e => { enforceGridSize(e.target) });
+rebuildGrid.querySelector("#gridY").addEventListener("input", e => { enforceGridSize(e.target) });
 
 
 //********************************************************/

@@ -14,7 +14,7 @@
         <!--Control Panel-->
         <div id="controlPanel">
             <!--Reset Button-->
-            <button id="resetButton">Reset Grid</button>
+            <button id="resetButton">Clear Grid</button>
 
             <!--Box for buildable furniture display-->
             <div id="windowShopping">
@@ -24,14 +24,29 @@
             <form id = "buildFurniture">
                 <label for="shoppingX">Width:</label>
                 <input type="number" id="shoppingX" name="shoppingX" min="1" value="1">
+                <br>
                 <label for="shoppingY">Height:</label>
                 <input type="number" id="shoppingY" name="shoppingY" min="1" value="1">
+                <br>
                 <input type="button" id="orderFurniture" name="orderFurniture" value="Build Furniture">
             </form>
 
+            
+            <!--Drop space to recycle furniture-->
             <div id="garbageBin" class="garbage">
                 Garbage Bin:<br/>Drop Here to Delete
             </div>
+            
+            <!--Button to build new grid-->
+            <form id = "rebuildGrid">
+                <label for="gridX">Grid Width:</label>
+                <input type="number" id="gridX" name="gridX" min="1" value="25">
+                <br>
+                <label for="gridY">Grid Height:</label>
+                <input type="number" id="gridY" name="gridY" min="1" value="25">
+                <br>
+                <input type="button" id="newGrid" name="newGrid" value="Resize Grid">
+            </form>
 
             <!--Instruction Box-->
             <div id="instructions">

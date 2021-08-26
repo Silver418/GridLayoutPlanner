@@ -6,10 +6,8 @@ body{
 #appWrap{
     margin: 25px auto;
     background: beige;
-    /*max-width: 60%;*/
     min-height: 90%;
     border-radius: 15px;
-    /*position: relative;*/
 }
 
 
@@ -49,6 +47,12 @@ body{
     border: 1px solid black;
     text-align: center;
 }
+
+#buildFurniture input[type="number"],
+#rebuildGrid input[type="number"]{
+    max-width: 70px;
+}
+
 
 
 /* Grid CSS */
