@@ -1,5 +1,5 @@
 Grid Layout Planner
-v0.14
+v0.15
 ----------------------------------------------
 
 A tool for planning grid layouts based on draggable furniture & blocked terrain.
@@ -12,12 +12,9 @@ Tested in Google Chrome on Windows.
 KNOWN BUGS
 ----------
 	~The first time furniture is dragged from the shopping window, it displays under the grid until dropped onto the grid.
-	~Widths & heights above the maximum of 6 squares can be entered by typing instaed of using the up/down arrows.
-		This can cause furniture in the shopping window	to overflow & cover buttons.
 
 PLANNED FEATURES
 ----------------
-	~Custom grid sizes (& grid re-drawing implied thereby)
 	~Improve terrain editing - click/drag paint mode at least, separate paint/erase modes
 
 
@@ -39,3 +36,7 @@ Maximum is set from a variable in the app.js script for easier changes in the fu
 
 v0.14
 App wrapper now expands its height & width to fit large grids. (Which will be visible when custom grid sizes are possible.)
+
+v0.15
+Able to resize grid to a custom size. This currently destroys all furniture & terrain on the grid,
+including furniture/terrain within the bounds of the new grid size.

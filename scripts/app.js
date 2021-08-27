@@ -11,10 +11,8 @@ const garbageBin = document.querySelector("#garbageBin");
 const rebuildGrid = document.querySelector("#rebuildGrid");
 
 //Vars
-const desiredX = 25; //x & y for grid size
-const desiredY = 25;
-//const desiredX = 75;
-//const desiredY = 75;
+let desiredX = 25; //x & y for grid size
+let desiredY = 25;
 let maxFurnitureSize = 6;   //maximum squares for the height & width of furniture pieces
 //let maxGridSize = 200;     //maximum height & width in squares for grid. Completely arbitrary for now. :P
 
@@ -63,6 +61,8 @@ const initializeGrid = () => {
 
         daGrid.appendChild(myRow);
     }
+    // adjust wrapper size to fit grid
+    setWrapperMinSize();
 }
 
 //delete grid & everything on it
@@ -135,11 +135,26 @@ controlPanel.querySelector("#resetButton").addEventListener("click", () => {
     }
 }); //end reset button handler
 
-
 //Build Furniture button event listener
 controlPanel.querySelector("#orderFurniture").addEventListener("click", e => {
     newWindowShoppingFurniture();
 })
+
+//Resize Grid button handler
+rebuildGrid.querySelector("#newGrid").addEventListener("click", e =>{
+    //future logic for checking whether the confirmation box is necessary & calling resizing-with-keeping-some-furniture will go here
+    
+    //confirmation box
+    let confirmBool = confirm("This will remove all terrain and all furniture on the grid! Continue?");
+
+    if(confirmBool){
+        destroyGrid();
+        desiredX = Number(rebuildGrid.querySelector("#gridX").value);
+        desiredY = Number(rebuildGrid.querySelector("#gridY").value);
+        initializeGrid();
+    }
+})
+
 
 //Create New Furntiure in the Window Shopping window using current input values
 const newWindowShoppingFurniture = () => {
@@ -171,9 +186,9 @@ buildY.addEventListener("input", e => { enforceFurnitureSize(e.target) });
 const enforceGridSize = handle => {
     if (handle.value < 1) {
         handle.value = 1;
-    } else if (handle.value > maxFurnitureSize) {
+    } /*else if (handle.value > maxFurnitureSize) { //maximum size logic
         handle.value = maxFurnitureSize
-    }
+    }*/
 }
 //event handlers for value change
 rebuildGrid.querySelector("#gridX").addEventListener("input", e => { enforceGridSize(e.target) });
@@ -357,9 +372,6 @@ newWindowShoppingFurniture();
 
 //Initialize base Grid
 initializeGrid()
-
-//set minimum size of wrapper to fit grid
-setWrapperMinSize();
 
 //set max inputs for furniture size length & width, using variable defined in vars section of this script
 buildX.max = maxFurnitureSize;
