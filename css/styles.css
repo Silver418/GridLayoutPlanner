@@ -12,6 +12,31 @@ body{
 
 
 /* Control Panel CSS */
+#controlPanelTabs > ul{
+    padding: 0px;
+}
+li.tab{
+    list-style: none;
+    display: inline-block;
+    cursor: pointer;
+    border: 3px plum solid;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px;
+}
+
+li.tab.active{
+    background-color: plum;
+}
+
+div.tabContent{
+    display: none;
+}
+
+div.tabContent.active{
+    display: block;
+}
+
 #controlPanel{
     position: relative;
     left: 0;

@@ -9,6 +9,7 @@ const buildX = buildFurniture.querySelector("#shoppingX");
 const buildY = buildFurniture.querySelector("#shoppingY");
 const garbageBin = document.querySelector("#garbageBin");
 const rebuildGrid = document.querySelector("#rebuildGrid");
+const tabsWrap = document.querySelector("#controlPanelTabs");
 
 //Vars
 let desiredX = 25; //x & y for grid size
@@ -113,6 +114,23 @@ const getGridSquarePosition = (x, y) => {
 //********************************************************/
 //Control Panel Events
 
+//Tab click events
+tabsWrap.querySelectorAll(".tab").forEach( tabElement => {
+    tabElement.addEventListener("click", e =>{
+        tabsWrap.querySelectorAll(".tab").forEach(tab =>{
+            tab.classList.remove("active");
+        });
+        e.target.classList.add("active");
+
+        tabsWrap.querySelectorAll(".tabContent").forEach (content => {
+            content.classList.remove("active");
+        })
+        tabsWrap.querySelector(e.target.getAttribute("content-target")).classList.add("active");
+    });
+});
+
+
+
 //Reset Button Event
 controlPanel.querySelector("#resetButton").addEventListener("click", () => {
     //confirmation box
@@ -193,6 +211,7 @@ const enforceGridSize = handle => {
 //event handlers for value change
 rebuildGrid.querySelector("#gridX").addEventListener("input", e => { enforceGridSize(e.target) });
 rebuildGrid.querySelector("#gridY").addEventListener("input", e => { enforceGridSize(e.target) });
+
 
 
 //********************************************************/

@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,46 +8,74 @@
 
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
+
 <body>
-    
+
     <div id="appWrap">
-        
+
         <!--Control Panel-->
         <div id="controlPanel">
-            <!--Reset Button-->
-            <button id="resetButton">Clear Grid</button>
 
-            <!--Box for buildable furniture display-->
-            <div id="windowShopping">
-                <div id="windowShoppingSlot"></div>
+            <!--Tab-Content pairs for control modes-->
+            <div id="controlPanelTabs">
+                <!--Control tabs-->
+                <ul>
+                    <li class="tab active" id="gridTab" content-target="#gridContent">Grid</li>
+                    <li class="tab" id="terrainTab" content-target="#terrainContent">Terrain</li>
+                    <li class="tab" id="furnitureTab" content-target="#furnitureContent">Furniture</li>
+                </ul>
+                
+
+                <!--Control content-->
+                
+                <!--Grid controls-->
+                <div class="tabContent active" id="gridContent">
+                    <!--Reset Button-->
+                    <button id="resetButton">Clear Grid</button>
+                    <!--Button to build new grid-->
+                    <form id="rebuildGrid">
+                        <label for="gridX">Grid Width:</label>
+                        <input type="number" id="gridX" name="gridX" min="1" value="25">
+                        <br>
+                        <label for="gridY">Grid Height:</label>
+                        <input type="number" id="gridY" name="gridY" min="1" value="25">
+                        <br>
+                        <input type="button" id="newGrid" name="newGrid" value="Resize Grid">
+                    </form>
+                </div>
+
+                <!--Terrain controls-->
+                <div class="tabContent" id="terrainContent">
+                    Terrain placeholder
+                </div>
+
+                <!--Furniture controls-->
+                <div class="tabContent" id="furnitureContent">
+                    <!--Box for buildable furniture display-->
+                    <div id="windowShopping">
+                        <div id="windowShoppingSlot"></div>
+                    </div>
+
+                    <form id="buildFurniture">
+                        <label for="shoppingX">Width:</label>
+                        <input type="number" id="shoppingX" name="shoppingX" min="1" value="1">
+                        <br>
+                        <label for="shoppingY">Height:</label>
+                        <input type="number" id="shoppingY" name="shoppingY" min="1" value="1">
+                        <br>
+                        <input type="button" id="orderFurniture" name="orderFurniture" value="Build Furniture">
+                    </form>
+
+
+                    <!--Drop space to recycle furniture-->
+                    <div id="garbageBin" class="garbage">
+                        Garbage Bin:<br />Drop Here to Delete
+                    </div>
+                </div>
             </div>
 
-            <form id = "buildFurniture">
-                <label for="shoppingX">Width:</label>
-                <input type="number" id="shoppingX" name="shoppingX" min="1" value="1">
-                <br>
-                <label for="shoppingY">Height:</label>
-                <input type="number" id="shoppingY" name="shoppingY" min="1" value="1">
-                <br>
-                <input type="button" id="orderFurniture" name="orderFurniture" value="Build Furniture">
-            </form>
 
-            
-            <!--Drop space to recycle furniture-->
-            <div id="garbageBin" class="garbage">
-                Garbage Bin:<br/>Drop Here to Delete
-            </div>
-            
-            <!--Button to build new grid-->
-            <form id = "rebuildGrid">
-                <label for="gridX">Grid Width:</label>
-                <input type="number" id="gridX" name="gridX" min="1" value="25">
-                <br>
-                <label for="gridY">Grid Height:</label>
-                <input type="number" id="gridY" name="gridY" min="1" value="25">
-                <br>
-                <input type="button" id="newGrid" name="newGrid" value="Resize Grid">
-            </form>
+
 
             <!--Instruction Box-->
             <div id="instructions">
@@ -55,7 +84,8 @@
                     <li>(WASD will also resize the furniture object in the waiting area.)</li>
                     <li>Click + Drag furniture onto the grid.</li>
                     <li>While dragging furniture, use Q & E to rotate it.</li>
-                    <li>Create blocked terrain squares by clicking on the grid. This is meant to represent walls and similar. Furniture cannot be placed on these squares.</li>
+                    <li>Create blocked terrain squares by clicking on the grid. This is meant to represent walls and
+                        similar. Furniture cannot be placed on these squares.</li>
                 </ul>
 
             </div>
@@ -75,4 +105,5 @@
     <script src="scripts/FurnitureLinker.js"></script>
     <script src="scripts/app.js"></script>
 </body>
+
 </html>
