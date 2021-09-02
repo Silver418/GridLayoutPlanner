@@ -17,12 +17,16 @@ let desiredY = 25;
 let maxFurnitureSize = 6;   //maximum squares for the height & width of furniture pieces
 //let maxGridSize = 200;     //maximum height & width in squares for grid. Completely arbitrary for now. :P
 
-let mode = "paint";     //valid modes so far - "paint", "lift"
+let mode = "grid";     //currently active mode - determines what hotkey controls will respond
+const modes = ["grid", "terrain", "furniture"]; //valid modes
+//corresponds to numeric hotkeys, starting with index 0 = hotkey number 1
+//tab "content-target" attribute for tabbed controls in HTML file should match values in this array
 
-const furnitureLink = new FurnitureLinker("furnitureIndex"); //extended version
+
+const furnitureLink = new FurnitureLinker("furnitureIndex"); //linker object for furniture objects with matching DOM elements
 //index 0 is reserved for the current window shopping furniture
 
-let liftedFurniture;
+let liftedFurniture;    //used to hold furniture being dragged by the mouse
 
 
 
@@ -68,15 +72,15 @@ const initializeGrid = () => {
 
 //delete grid & everything on it
 const destroyGrid = () =>{
-    //being very odd about this as future proofing: some planned future features will have extra non-grid places
-    //to store furniture, so grid furniture won't necessarily be in order or represent all furniture in the furnitureLinker array
+    //some planned future features will have extra non-grid places to store furniture,
+    //so grid furniture won't necessarily be in order or represent all furniture in the furnitureLinker array
     
     let gridFurnitureIndexes = [];
     //get indexes of all active furniture, add to array
     activeFurniture.childNodes.forEach(thisNode=>{
         gridFurnitureIndexes.push((Number(thisNode.getAttribute("furnitureIndex"))));
     })
-    //reverse sort indexes in array
+    //reverse sort indexes in array (reverse sort reduces the amount of relabling required by the ObjectDomLinker methods)
     gridFurnitureIndexes.sort((a, b)=>{return b-a});
     //destroy matching object-dom sets of all indexes in array
     for (let i = 0; i < gridFurnitureIndexes.length; i++){
@@ -92,7 +96,7 @@ const destroyGrid = () =>{
 //Clicking on the grid event
 daGrid.addEventListener("click", e => {
     //paint mode: filling in grid boxes
-    if (mode === "paint") {
+    if (mode === "terrain") {
         if (e.target.classList.contains("square")) {
             e.target.classList.toggle("full");
         }
@@ -100,7 +104,7 @@ daGrid.addEventListener("click", e => {
 })
 
 
-//Get position of a grid square from its x-y coordinates, relative to the daGrid div from top-left corner
+//helper method to get position of a grid square from its x-y coordinates, relative to the daGrid div from top-left corner
 //returns an array containing [x,y]
 const getGridSquarePosition = (x, y) => {
     const square = daGrid.querySelector(`#square${x}-${y}`);
@@ -117,19 +121,38 @@ const getGridSquarePosition = (x, y) => {
 //Tab click events
 tabsWrap.querySelectorAll(".tab").forEach( tabElement => {
     tabElement.addEventListener("click", e =>{
-        tabsWrap.querySelectorAll(".tab").forEach(tab =>{
-            tab.classList.remove("active");
-        });
-        e.target.classList.add("active");
-
-        tabsWrap.querySelectorAll(".tabContent").forEach (content => {
-            content.classList.remove("active");
-        })
-        tabsWrap.querySelector(e.target.getAttribute("content-target")).classList.add("active");
+        setActiveTab(e.target.getAttribute("content-target"));
     });
 });
 
+//tab hotkey events
+//applies to nunmber keys
+document.addEventListener("keydown", e=>{
+    // do not proceed if an input has the focus or if any furniture is currently being dragged
+    if (liftedFurniture == null && e.target.tagName.toLowerCase() !== "input"){    
+        //# of valid modes & active hotkeys determined by length of modes array
+        if (Number(e.key) > 0 &&  Number(e.key) <= modes.length){
+            setActiveTab(modes[Number(e.key)-1]);
+        }
+    }
+});
 
+//helper method for activating tabs & content
+const setActiveTab = targetTab =>{
+    //remove active class from tabs
+    tabsWrap.querySelectorAll(".tab").forEach(tab =>{
+        tab.classList.remove("active");
+    });
+    //remove active class from content
+    tabsWrap.querySelectorAll(".tabContent").forEach (content => {
+        content.classList.remove("active");
+    });
+    //apply active to correct tab & content
+    tabsWrap.querySelector("#"+ targetTab + "Tab").classList.add("active");
+    tabsWrap.querySelector("#"+ targetTab + "Content").classList.add("active");
+    //set current mode
+    mode = targetTab;
+}
 
 //Reset Button Event
 controlPanel.querySelector("#resetButton").addEventListener("click", () => {
@@ -256,7 +279,6 @@ appWrap.addEventListener("mousedown", e => {
         liftedFurniture.style.position = "fixed";
         liftedFurniture.style.left = e.clientX + "px";
         liftedFurniture.style.top = e.clientY + "px";
-        mode = "lift";
         let furnitureObject = furnitureLink.fetchObjFromDom(liftedFurniture);
         furnitureObject.backupOrientation();
     }
@@ -302,12 +324,10 @@ document.addEventListener("keydown", e => {
 //put down lifted furniture on mouseup
 appWrap.addEventListener("mouseup", e => {
 
-
     if (liftedFurniture) {
         liftedObject = furnitureLink.fetchObjFromDom(liftedFurniture);
 
-
-        //testing ideas
+        //check if the point we're dropping on contains a valid drop location
         const elements = document.elementsFromPoint(e.clientX, e.clientY);
         let boxWeCareAbout;
         let dropType = "";
@@ -323,8 +343,9 @@ appWrap.addEventListener("mouseup", e => {
         });
 
 
-
+        //if we found a valid drop location, handle dropping
         if (boxWeCareAbout) {
+            //if drop location is a grid square
             if (dropType === "square") {
                 liftedFurniture.style.position = "absolute";
                 liftedFurniture.style.left = boxWeCareAbout.offsetLeft;
@@ -356,7 +377,8 @@ appWrap.addEventListener("mouseup", e => {
 
                 }
 
-            } else if (dropType === "garbage") {// if drop location was the garbage bin to delete furniture 
+
+            } else if (dropType === "garbage") { // if drop location was the garbage bin to delete furniture 
                 let indexToDelete = furnitureLink.indexFromDom(liftedFurniture);
 
                 if (indexToDelete === "0") { //handling for silly users dropping window shopping furniture into garbage bin
@@ -369,12 +391,12 @@ appWrap.addEventListener("mouseup", e => {
             }
 
 
-        } else {
+        } else { //no valid drop location, return box to previous location
             liftedObject.returnToPrevLocation();
         }
 
+        // clear var that stores the furniture being dragged by mouse
         liftedFurniture = null;
-        mode = "paint";
     }//end if(liftedFurniture)
 
 }); //end mouseup event to drop lifted furniture
