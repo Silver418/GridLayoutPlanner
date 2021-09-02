@@ -25,10 +25,15 @@
                     <li class="tab" id="furnitureTab" content-target="furniture">3. Furniture</li>
                     <!--"content-target" values should match the values in app.js's "modes" array-->
                 </ul>
-                
+                <!--Instruction Box-->
+                <div class="instructions">
+                    <ul>
+                        <li>Number keys: Change edit mode tabs.</li>
+                    </ul>
+                </div>
 
                 <!--Control content-->
-                
+
                 <!--Grid controls-->
                 <div class="tabContent active" id="gridContent">
                     <!--Reset Button-->
@@ -43,11 +48,27 @@
                         <br>
                         <input type="button" id="newGrid" name="newGrid" value="Resize Grid">
                     </form>
+                    <!--Instruction Box-->
+                    <div class="instructions">
+                        <ul>
+                            <li>Clear Grid: Click button to remove all terrain and furniture on the grid.</li>
+                            <li>Resize Grid: Click button to set new grid size from the input boxes.
+                                Currently also removes terrain and furniture from the grid.</li>
+                        </ul>
+
+                    </div>
                 </div>
 
                 <!--Terrain controls-->
                 <div class="tabContent" id="terrainContent">
-                    Terrain placeholder
+                    <!--Instruction Box-->
+                    <div class="instructions">
+                        <ul>
+                            <li>Create blocked terrain squares by clicking on the grid. This is meant to represent walls
+                                and similar obstructions. Furniture cannot be placed on these squares.</li>
+                        </ul>
+
+                    </div>
                 </div>
 
                 <!--Furniture controls-->
@@ -72,24 +93,24 @@
                     <div id="garbageBin" class="garbage">
                         Garbage Bin:<br />Drop Here to Delete
                     </div>
+
+                    <!--Instruction Box-->
+                    <div class="instructions">
+                        <ul>
+                            <li>Use Width/Height inputs & Build Furniture button to create draggable furniture objects.
+                            </li>
+                            <li>(WASD will also resize the furniture object in the waiting area.)</li>
+                            <li>Click + Drag furniture onto the grid.</li>
+                            <li>While dragging furniture, use Q & E to rotate it.</li>
+                            <li>Furniture cannot be placed on squares blocked by terrain or other furniture.</li>
+                        </ul>
+
+                    </div>
                 </div>
             </div>
 
 
 
-
-            <!--Instruction Box-->
-            <div id="instructions">
-                <ul>
-                    <li>Use Width/Height inputs & Build Furniture button to create draggable furniture objects.</li>
-                    <li>(WASD will also resize the furniture object in the waiting area.)</li>
-                    <li>Click + Drag furniture onto the grid.</li>
-                    <li>While dragging furniture, use Q & E to rotate it.</li>
-                    <li>Create blocked terrain squares by clicking on the grid. This is meant to represent walls and
-                        similar. Furniture cannot be placed on these squares.</li>
-                </ul>
-
-            </div>
         </div>
 
 
