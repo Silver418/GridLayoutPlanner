@@ -1,5 +1,5 @@
 Grid Layout Planner
-v0.15
+v0.16
 ----------------------------------------------
 
 A tool for planning grid layouts based on draggable furniture & blocked terrain.
@@ -40,3 +40,8 @@ App wrapper now expands its height & width to fit large grids. (Which will be vi
 v0.15
 Able to resize grid to a custom size. This currently destroys all furniture & terrain on the grid,
 including furniture/terrain within the bounds of the new grid size.
+
+v0.16
+Created tabs for the control panel. THe active tab controls which edit mode is active & what controls are available.
+Current tabs are Grid, Terrain, and Furniture.
+Number keys serve as hotkeys for activating tabs.
