@@ -10,6 +10,7 @@ const buildY = buildFurniture.querySelector("#shoppingY");
 const garbageBin = document.querySelector("#garbageBin");
 const rebuildGrid = document.querySelector("#rebuildGrid");
 const tabsWrap = document.querySelector("#controlPanelTabs");
+const paintRadio = document.querySelector("#paintRad");
 
 //Vars
 let desiredX = 25; //x & y for grid size
@@ -93,12 +94,17 @@ const destroyGrid = () =>{
     })
 } //end destroyGrid()
 
-//Clicking on the grid event
+//Clicking on the grid event to paint/erase terrain
 daGrid.addEventListener("click", e => {
-    //paint mode: filling in grid boxes
+    //terrain edit mode
     if (mode === "terrain") {
         if (e.target.classList.contains("square")) {
-            e.target.classList.toggle("full");
+            if (paintRadio.checked){
+                e.target.classList.add("full");
+            } else {
+                e.target.classList.remove("full");
+            }
+            
         }
     }
 })
