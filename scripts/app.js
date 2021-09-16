@@ -10,19 +10,19 @@ const buildY = buildFurniture.querySelector("#shoppingY");
 const garbageBin = document.querySelector("#garbageBin");
 const rebuildGrid = document.querySelector("#rebuildGrid");
 const tabsWrap = document.querySelector("#controlPanelTabs");
-const paintRadio = document.querySelector("#paintRad");
+const paintRadio = tabsWrap.querySelector("#paintRad");
+const eraseRadio = tabsWrap.querySelector("#eraseRad");
 
 //Vars
 let desiredX = 25; //x & y for grid size
 let desiredY = 25;
 let maxFurnitureSize = 6;   //maximum squares for the height & width of furniture pieces
-//let maxGridSize = 200;     //maximum height & width in squares for grid. Completely arbitrary for now. :P
 
-let mode = "grid";     //currently active mode - determines what hotkey controls will respond
+
 const modes = ["grid", "terrain", "furniture"]; //valid modes
 //corresponds to numeric hotkeys, starting with index 0 = hotkey number 1
 //tab "content-target" attribute for tabbed controls in HTML file should match values in this array
-
+let mode = modes[0];     //currently active mode - determines what hotkey controls will respond
 
 const furnitureLink = new FurnitureLinker("furnitureIndex"); //linker object for furniture objects with matching DOM elements
 //index 0 is reserved for the current window shopping furniture
@@ -95,19 +95,31 @@ const destroyGrid = () =>{
 } //end destroyGrid()
 
 //Clicking on the grid event to paint/erase terrain
-daGrid.addEventListener("click", e => {
+daGrid.addEventListener("mousedown", e => {
     //terrain edit mode
-    if (mode === "terrain") {
-        if (e.target.classList.contains("square")) {
-            if (paintRadio.checked){
-                e.target.classList.add("full");
-            } else {
-                e.target.classList.remove("full");
-            }
-            
+    if (mode === "terrain" && e.target.classList.contains("square")) {
+        e.preventDefault();
+
+        if (paintRadio.checked){
+            e.target.classList.add("full");
+        } else {
+            e.target.classList.remove("full");
         }
     }
 })
+
+//dragging across the grid event while holding mousedown to paint/erase terrain
+daGrid.addEventListener("mouseover", e=>{
+    if (mode === "terrain" && e.target.classList.contains("square") && e.buttons == 1 & !liftedFurniture){
+        if (paintRadio.checked){
+            e.target.classList.add("full");
+        } else {
+            e.target.classList.remove("full");
+        }
+    }
+});
+
+
 
 
 //helper method to get position of a grid square from its x-y coordinates, relative to the daGrid div from top-left corner
@@ -159,6 +171,18 @@ const setActiveTab = targetTab =>{
     //set current mode
     mode = targetTab;
 }
+
+//Terrain tab - Paintbrush/Eraser mode hotkeys
+document.addEventListener("keydown", e=>{
+   if (mode === "terrain") {
+        if (e.key === "q"){
+            paintRad.checked = "checked";
+       } else if (e.key === "w") {
+           eraseRadio.checked = "checked";
+
+       }
+   }
+})
 
 //Reset Button Event
 controlPanel.querySelector("#resetButton").addEventListener("click", () => {
