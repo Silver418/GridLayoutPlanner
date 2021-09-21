@@ -12,6 +12,8 @@ const rebuildGrid = document.querySelector("#rebuildGrid");
 const tabsWrap = document.querySelector("#controlPanelTabs");
 const paintRadio = tabsWrap.querySelector("#paintRad");
 const eraseRadio = tabsWrap.querySelector("#eraseRad");
+const linePaintRadio = tabsWrap.querySelector("#linePaintRad");
+const lineEraseRadio = tabsWrap.querySelector("#lineEraseRad");
 
 //Vars
 let desiredX = 25; //x & y for grid size
@@ -102,8 +104,12 @@ daGrid.addEventListener("mousedown", e => {
 
         if (paintRadio.checked){
             e.target.classList.add("full");
-        } else {
+        } else if (eraseRadio.checked){
             e.target.classList.remove("full");
+        } else if (linePaintRadio.checked){
+            console.log("we clicking while line paint mode on");
+        } else if (lineEraseRadio.checked){
+            console.log("we clicking while line erase mode on");
         }
     }
 })
@@ -113,9 +119,21 @@ daGrid.addEventListener("mouseover", e=>{
     if (mode === "terrain" && e.target.classList.contains("square") && e.buttons == 1 & !liftedFurniture){
         if (paintRadio.checked){
             e.target.classList.add("full");
-        } else {
+        } else if (eraseRadio.checked){
             e.target.classList.remove("full");
+        } else if (linePaintRadio.checked){
+            console.log("we dragging line paint mode");
+        } else if (lineEraseRadio.checked){
+            console.log("we dragging line erase mode");
         }
+    }
+});
+
+//mouseup while dragging a line brush/erase tool
+//(may need to add this one to the whole document - moving to another part of the page & lifting could break the tool otherwise)
+daGrid.addEventListener("mouseup", e=>{
+    if (mode === "terrain" && (linePaintRadio.checked || lineEraseRadio.checked)){ //TODO: this out to check whether an origin is set (once we have origin var)
+        console.log("mouse up while terrain mode");
     }
 });
 
@@ -144,7 +162,7 @@ tabsWrap.querySelectorAll(".tab").forEach( tabElement => {
 });
 
 //tab hotkey events
-//applies to nunmber keys
+//applies to number keys
 document.addEventListener("keydown", e=>{
     // do not proceed if an input has the focus or if any furniture is currently being dragged
     if (liftedFurniture == null && e.target.tagName.toLowerCase() !== "input"){    
@@ -175,12 +193,22 @@ const setActiveTab = targetTab =>{
 //Terrain tab - Paintbrush/Eraser mode hotkeys
 document.addEventListener("keydown", e=>{
    if (mode === "terrain") {
-        if (e.key === "q"){
-            paintRad.checked = "checked";
-       } else if (e.key === "w") {
-           eraseRadio.checked = "checked";
-
-       }
+        switch(e.key){
+            case "q":
+                paintRad.checked = "checked";
+                break;
+            case "w":
+                eraseRadio.checked = "checked";
+                break;
+            case "e":
+                linePaintRadio.checked = "checked";
+                break;
+            case "r":
+                lineEraseRadio.checked = "checked";
+                break;
+            default:
+                break;
+        }
    }
 })
 
