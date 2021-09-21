@@ -29,7 +29,12 @@ let mode = modes[0];     //currently active mode - determines what hotkey contro
 const furnitureLink = new FurnitureLinker("furnitureIndex"); //linker object for furniture objects with matching DOM elements
 //index 0 is reserved for the current window shopping furniture
 
+//edit mode & submode vars
 let liftedFurniture;    //used to hold furniture being dragged by the mouse
+let lineOrigin;         //DOM element of the square serving as the starting point of a line segment
+let lineTarget;         //DOM element of the square serving as the end point of a line segment
+
+
 
 
 
@@ -106,10 +111,9 @@ daGrid.addEventListener("mousedown", e => {
             e.target.classList.add("full");
         } else if (eraseRadio.checked){
             e.target.classList.remove("full");
-        } else if (linePaintRadio.checked){
-            console.log("we clicking while line paint mode on");
-        } else if (lineEraseRadio.checked){
-            console.log("we clicking while line erase mode on");
+        } else if (linePaintRadio.checked || lineEraseRadio.checked){
+            lineTarget = lineOrigin = e.target;
+            e.target.classList.add("lineEnd");
         }
     }
 })
@@ -117,14 +121,30 @@ daGrid.addEventListener("mousedown", e => {
 //dragging across the grid event while holding mousedown to paint/erase terrain
 daGrid.addEventListener("mouseover", e=>{
     if (mode === "terrain" && e.target.classList.contains("square") && e.buttons == 1 & !liftedFurniture){
-        if (paintRadio.checked){
+        if (paintRadio.checked){ //paint mode (freehand)
             e.target.classList.add("full");
-        } else if (eraseRadio.checked){
+
+        } else if (eraseRadio.checked){ //erase mode (freehand)
             e.target.classList.remove("full");
-        } else if (linePaintRadio.checked){
-            console.log("we dragging line paint mode");
-        } else if (lineEraseRadio.checked){
-            console.log("we dragging line erase mode");
+
+        } else if (linePaintRadio.checked || lineEraseRadio.checked){ //we are dragging in line paint or line erase mode
+            if (lineOrigin != lineTarget){ //remove lineEnd style from previous lineTarget, if it's not also the origin
+                lineTarget.classList.remove("lineEnd");
+            }
+            //determine new line end here & apply style
+            let mouseSquareXY = getXYFromSquare(e.target); //get X,Y of square moused over
+            let originXY = getXYFromSquare(lineOrigin);
+            diffX = Math.abs(originXY[0] - mouseSquareXY[0]);
+            diffY = Math.abs(originXY[1] - mouseSquareXY[1]);
+            
+            let targetXY = new Array(2);
+            
+            if (diffX <= diffY){
+                lineTarget = getSquareFromXY(originXY[0], mouseSquareXY[1]);
+            } else {
+                lineTarget = getSquareFromXY(mouseSquareXY[0], originXY[1]);
+            }
+            lineTarget.classList.add("lineEnd");
         }
     }
 });
@@ -132,24 +152,39 @@ daGrid.addEventListener("mouseover", e=>{
 //mouseup while dragging a line brush/erase tool
 //(may need to add this one to the whole document - moving to another part of the page & lifting could break the tool otherwise)
 daGrid.addEventListener("mouseup", e=>{
-    if (mode === "terrain" && (linePaintRadio.checked || lineEraseRadio.checked)){ //TODO: this out to check whether an origin is set (once we have origin var)
-        console.log("mouse up while terrain mode");
+    if (mode === "terrain" && lineOrigin){
+        lineOrigin.classList.remove("lineEnd");
+        lineTarget.classList.remove("lineEnd");
+        lineOrigin = null;
+        lineTarget = null;
     }
 });
 
 
 
 
-//helper method to get position of a grid square from its x-y coordinates, relative to the daGrid div from top-left corner
-//returns an array containing [x,y]
+//helper method to get pixel position of a grid square from its x-y coordinates, relative to the daGrid div from top-left corner
+//returns an array containing [x,y] in pixels
 const getGridSquarePosition = (x, y) => {
     const square = daGrid.querySelector(`#square${x}-${y}`);
     return [square.offsetLeft, square.offsetTop]
 }
 
+//getXYFromSquare
+//helper method to get the X-Y coordinates (in grid coordinates) of a square DOM object
+//returns an array with two elements, [x,y]
+const getXYFromSquare = square => {
+    let coords = square.getAttribute("id").slice(6).split("-");
+    coords[0] = Number(coords[0]);
+    coords[1] = Number(coords[1]);
+    return coords;
+}
 
-
-
+//getSquareFromXY
+//helper method to return the DOM element of a square the grid from XY coordinates
+const getSquareFromXY = (x, y) => {
+    return daGrid.querySelector(`#square${x}-${y}`);
+}
 
 //********************************************************/
 //Control Panel Events
@@ -409,7 +444,7 @@ appWrap.addEventListener("mouseup", e => {
                 liftedFurniture.style.left = boxWeCareAbout.offsetLeft;
                 liftedFurniture.style.top = boxWeCareAbout.offsetTop;
 
-                const boxID = boxWeCareAbout.getAttribute("id").slice(6).split("-");
+                const boxID = getXYFromSquare(boxWeCareAbout);//.getAttribute("id").slice(6).split("-");
 
                 let collisionBool = furnitureLink.detectCollision(liftedObject, boxID[0], boxID[1]);
                 if (collisionBool === true) { //collision found, reverse drop

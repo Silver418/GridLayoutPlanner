@@ -102,6 +102,12 @@ div.tabContent.active{
     background: rebeccapurple;
 }
 
+#daGrid .square.lineEnd{
+    background-color: powderblue;
+}
+
+
+/*Furniture CSS*/
 
 .furniture{
     transform-origin: top left;
