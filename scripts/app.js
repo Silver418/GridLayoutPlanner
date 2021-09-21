@@ -151,8 +151,55 @@ daGrid.addEventListener("mouseover", e=>{
 
 //mouseup while dragging a line brush/erase tool
 //(may need to add this one to the whole document - moving to another part of the page & lifting could break the tool otherwise)
-daGrid.addEventListener("mouseup", e=>{
+document.addEventListener("mouseup", e=>{
     if (mode === "terrain" && lineOrigin){
+
+        //determine direction
+        let originXY = getXYFromSquare(lineOrigin);
+        let targetXY = getXYFromSquare(lineTarget);
+
+        if(originXY[0] == targetXY[0]){ //line is vertical
+            let valsY = (originXY[1] <= targetXY[1] ? [originXY[1], targetXY[1]] : [targetXY[1],originXY[1]]); //returns array with the smallest & largest Y values from the coords
+            let valX = originXY[0];
+
+            if (linePaintRadio.checked){ //paint mode
+                for (let i = valsY[0]; i <= valsY[1]; i++){
+                    let box = getSquareFromXY(valX, i);
+                    box.classList.add("full"); //TODO: add check for furniture collision; do not add class if there's furniture there
+                }
+            } else if (lineEraseRadio.checked){ //erase mode
+                for (let i = valsY[0]; i <= valsY[1]; i++){
+                    let box = getSquareFromXY(valX, i);
+                    box.classList.remove("full");
+                }
+            } else {
+                console.log("unexpected line edit mode in mouse up terrain event?")
+            }
+            
+            
+        } else if(originXY[1] == targetXY[1]){ //line is horizontal
+            let valsX = (originXY[0] <= targetXY[0] ? [originXY[0], targetXY[0]] : [targetXY[0],originXY[0]]); //returns array with the smallest & largest X values from coords
+            let valY = originXY[1];
+
+            if (linePaintRadio.checked){ //paint mode
+                for (let i = valsX[0]; i <= valsX[1]; i++){
+                    let box = getSquareFromXY(i, valY);
+                    box.classList.add("full"); //TODO: add check for furniture collision; do not add class if there's furniture there
+                }
+            } else if (lineEraseRadio.checked){ //erase mode
+                for (let i = valsX[0]; i <= valsX[1]; i++){
+                    let box = getSquareFromXY(i, valY);
+                    box.classList.remove("full");
+                }
+            } else {
+                console.log("unexpected line edit mode in mouse up terrain event?")
+            }
+        } else {
+            console.log("Unexpected mismatch between origin & target in line paint/erase mouseup event");
+        }
+
+
+        //cleanup
         lineOrigin.classList.remove("lineEnd");
         lineTarget.classList.remove("lineEnd");
         lineOrigin = null;
