@@ -1,7 +1,7 @@
 //Furniture Class
 
 class Furniture {
-    constructor(x, y) {//will eventually take width & height
+    constructor(x, y, addToShopping = true) {//will eventually take width & height
         this.sizeX = parseInt(x);
         this.sizeY = parseInt(y);
 
@@ -14,8 +14,11 @@ class Furniture {
         this.endX = -1; //grid location of bottom-right corner of furniture
         this.endY = -1;
 
-        this.furniture = this.generateFurnitureDOM(this.sizeX, this.sizeY)
-    } ////end constructor
+        this.furniture = this.generateFurnitureDOM(this.sizeX, this.sizeY);
+        if (addToShopping) {
+            shopping.appendChild(this.furniture);
+        }
+    } //end constructor
 
     generateFurnitureDOM(sizeX, sizeY) {
         const myFurniture = document.createElement("div");
@@ -51,7 +54,6 @@ class Furniture {
             myFurniture.appendChild(myRow);
         }
 
-        shopping.appendChild(myFurniture)
         return myFurniture;
     } //end generateFurniture
 

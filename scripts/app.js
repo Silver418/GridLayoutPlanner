@@ -127,7 +127,7 @@ daGrid.addEventListener("mouseover", e=>{
         } else if (eraseRadio.checked){ //erase mode (freehand)
             e.target.classList.remove("full");
 
-        } else if (linePaintRadio.checked || lineEraseRadio.checked){ //we are dragging in line paint or line erase mode
+        } else if ((linePaintRadio.checked || lineEraseRadio.checked) && lineOrigin){ //we are dragging in line paint or line erase mode
             if (lineOrigin != lineTarget){ //remove lineEnd style from previous lineTarget, if it's not also the origin
                 lineTarget.classList.remove("lineEnd");
             }
@@ -165,7 +165,11 @@ document.addEventListener("mouseup", e=>{
             if (linePaintRadio.checked){ //paint mode
                 for (let i = valsY[0]; i <= valsY[1]; i++){
                     let box = getSquareFromXY(valX, i);
-                    box.classList.add("full"); //TODO: add check for furniture collision; do not add class if there's furniture there
+                    let dummy = new Furniture(1,1,false); //dummy furniture for collision check
+                    if (!furnitureLink.detectCollision(dummy, valX, i)){//check for collision with furniture; if none, paint square
+                        box.classList.add("full");
+                    }
+                    
                 }
             } else if (lineEraseRadio.checked){ //erase mode
                 for (let i = valsY[0]; i <= valsY[1]; i++){
@@ -184,7 +188,10 @@ document.addEventListener("mouseup", e=>{
             if (linePaintRadio.checked){ //paint mode
                 for (let i = valsX[0]; i <= valsX[1]; i++){
                     let box = getSquareFromXY(i, valY);
-                    box.classList.add("full"); //TODO: add check for furniture collision; do not add class if there's furniture there
+                    let dummy = new Furniture(1,1, false); //dummy furniture for collision check
+                    if (!furnitureLink.detectCollision(dummy, i, valY)){//check for collision with furniture; if none, paint square
+                        box.classList.add("full");
+                    }
                 }
             } else if (lineEraseRadio.checked){ //erase mode
                 for (let i = valsX[0]; i <= valsX[1]; i++){
