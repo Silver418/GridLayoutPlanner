@@ -34,6 +34,14 @@ let liftedFurniture;    //used to hold furniture being dragged by the mouse
 let lineOrigin;         //DOM element of the square serving as the starting point of a line segment
 let lineTarget;         //DOM element of the square serving as the end point of a line segment
 
+/* isBusy
+   Multi-event operations (like dragging furniture or drawing a line with the terrain line paintbrush/eraser) will set this to true
+   The event which finishes the operation will set it to false
+   Changing edit modes (grid, terrain, etc.) & subedit modes (freehand & line paintbrushes/erasers), and anything else that can
+   cause problems if it attempts to interrupt the operation, should check this var before starting.*/
+let isBusy = false;     
+                        
+
 
 
 
@@ -114,6 +122,7 @@ daGrid.addEventListener("mousedown", e => {
         } else if (linePaintRadio.checked || lineEraseRadio.checked){
             lineTarget = lineOrigin = e.target;
             e.target.classList.add("lineEnd");
+            isBusy = true;
         }
     }
 })
@@ -211,6 +220,7 @@ document.addEventListener("mouseup", e=>{
         lineTarget.classList.remove("lineEnd");
         lineOrigin = null;
         lineTarget = null;
+        isBusy = false;
     }
 });
 
@@ -253,8 +263,8 @@ tabsWrap.querySelectorAll(".tab").forEach( tabElement => {
 //tab hotkey events
 //applies to number keys
 document.addEventListener("keydown", e=>{
-    // do not proceed if an input has the focus or if any furniture is currently being dragged
-    if (liftedFurniture == null && e.target.tagName.toLowerCase() !== "input"){    
+    // do not proceed if an input has the focus or if any multi-event operation is happening (like furniture dragging)
+    if (isBusy == false && e.target.tagName.toLowerCase() !== "input"){    
         //# of valid modes & active hotkeys determined by length of modes array
         if (Number(e.key) > 0 &&  Number(e.key) <= modes.length){
             setActiveTab(modes[Number(e.key)-1]);
@@ -281,7 +291,7 @@ const setActiveTab = targetTab =>{
 
 //Terrain tab - Paintbrush/Eraser mode hotkeys
 document.addEventListener("keydown", e=>{
-   if (mode === "terrain") {
+   if (mode === "terrain" && isBusy == false) {
         switch(e.key){
             case "q":
                 paintRad.checked = "checked";
@@ -428,6 +438,7 @@ appWrap.addEventListener("mousedown", e => {
         liftedFurniture.style.top = e.clientY + "px";
         let furnitureObject = furnitureLink.fetchObjFromDom(liftedFurniture);
         furnitureObject.backupOrientation();
+        isBusy = true;
     }
 });
 
@@ -544,6 +555,7 @@ appWrap.addEventListener("mouseup", e => {
 
         // clear var that stores the furniture being dragged by mouse
         liftedFurniture = null;
+        isBusy = false;
     }//end if(liftedFurniture)
 
 }); //end mouseup event to drop lifted furniture

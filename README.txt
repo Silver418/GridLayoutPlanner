@@ -1,5 +1,5 @@
 Grid Layout Planner
-v0.16
+v0.17
 ----------------------------------------------
 
 A tool for planning grid layouts based on draggable furniture & blocked terrain.
@@ -12,10 +12,12 @@ Tested in Google Chrome on Windows.
 KNOWN BUGS
 ----------
 	~The first time furniture is dragged from the shopping window, it displays under the grid until dropped onto the grid.
+	~Furniture wider than it is tall which is rotated 90 degrees & placed near the left edge of the grid will overflow horizontally.
+		I know one fix already, but am investigating other ways to avoid side effects.
 
 PLANNED FEATURES
 ----------------
-	~Improve terrain editing - click/drag paint mode at least, separate paint/erase modes
+	~TBA
 
 
 CHANGELOG
@@ -45,3 +47,7 @@ v0.16
 Created tabs for the control panel. THe active tab controls which edit mode is active & what controls are available.
 Current tabs are Grid, Terrain, and Furniture.
 Number keys serve as hotkeys for activating tabs.
+
+v0.17
+Added click-and-drag behavior to paint & erase tools for terrain editing.
+New tools include both freehand and straight-line.
