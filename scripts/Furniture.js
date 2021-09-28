@@ -1,7 +1,7 @@
 //Furniture Class
 
 class Furniture {
-    constructor(x, y, addToShopping = true) {//will eventually take width & height
+    constructor(x, y, addToShopping = true) {
         this.sizeX = parseInt(x);
         this.sizeY = parseInt(y);
 
@@ -53,6 +53,14 @@ class Furniture {
 
             myFurniture.appendChild(myRow);
         }
+
+        //this section sets a minimum width for the overall furniture div,
+        //which fixes the furniture incorrectly flowing when a wide furniture is
+        //rotated 90 or 270 degrees & placed near the right edge of the grid
+        let oneBoxWidth = document.querySelector(".square").offsetWidth;
+        myFurniture.style.minWidth = oneBoxWidth * sizeX;
+        //I would like to revisit this & solve with pure CSS rather than programmatically if possible
+        //I expect its current fix will make trouble if I try to implement any sort of zooming feature
 
         return myFurniture;
     } //end generateFurniture

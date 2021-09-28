@@ -566,12 +566,11 @@ appWrap.addEventListener("mouseup", e => {
 //********************************************************/
 //setup on initial page load
 
+//Initialize base Grid
+initializeGrid()
 
 //Initialize default furniture object
 newWindowShoppingFurniture();
-
-//Initialize base Grid
-initializeGrid()
 
 //set max inputs for furniture size length & width, using variable defined in vars section of this script
 buildX.max = maxFurnitureSize;
